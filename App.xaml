@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ToDoApp.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <x:String x:Key="AppName">ToDoApp</x:String>
+            <OnAppTheme x:Key="Primary" Light="#DBB2B2" Dark="#38101F" />
+            <OnAppTheme x:Key="BoolToDecorationConverter" x:TypeArguments="x:Object">
+                <x:Null />
+            </OnAppTheme>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

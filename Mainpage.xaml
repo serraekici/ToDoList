@@ -1,0 +1,39 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:ToDoApp.ViewModels"
+             x:Class="ToDoApp.MainPage"
+             x:DataType="viewmodels:MainViewModel"
+             Title="To Do List">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+        <Label Text="My To-Do List" FontSize="28" FontAttributes="Bold"
+               HorizontalOptions="Center" />
+
+        <HorizontalStackLayout Spacing="10">
+            <Entry Placeholder="Add new task..."
+                   Text="{Binding NewTask}"
+                   HorizontalOptions="FillAndExpand"/>
+            <Button Text="Add" Command="{Binding AddTaskCommand}" />
+        </HorizontalStackLayout>
+
+        <CollectionView ItemsSource="{Binding Tasks}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,5" Padding="10" BorderColor="#ccc" CornerRadius="12">
+                        <HorizontalStackLayout Spacing="10">
+                            <CheckBox IsChecked="{Binding IsCompleted}"
+                                      Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ToggleCompleteCommand}"
+                                      CommandParameter="{Binding .}" />
+                            <Label Text="{Binding Title}"
+                                   VerticalOptions="Center"
+                                   TextDecorations="{Binding IsCompleted, Converter={StaticResource BoolToTextDecorationConverter}}" />
+                            <Button Text="❌"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=DeleteTaskCommand}"
+                                    CommandParameter="{Binding .}" />
+                        </HorizontalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
