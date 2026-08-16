@@ -1,0 +1,19 @@
+{
+  "name": "bahçem",
+  "short_name": "bahçem",
+  "description": "Görevler, sayaçlar ve günün verimi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FBF3DF",
+  "theme_color": "#FBF3DF",
+  "icons": [
+    {
+      "src": "assets/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
