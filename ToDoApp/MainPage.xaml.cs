@@ -1,23 +1,25 @@
-﻿namespace ToDoApp;
+﻿using ToDoApp.ViewModels;
+
+namespace ToDoApp;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+    public MainPage(MainViewModel vm)
+    {
+        InitializeComponent();
+        BindingContext = vm;
+    }
 
-	public MainPage()
-	{
-		InitializeComponent();
-	}
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        if (BindingContext is MainViewModel vm)
+            await vm.LoadTasksCommand.ExecuteAsync(null);
+    }
 
-	private void OnCounterClicked(object? sender, EventArgs e)
-	{
-		count++;
-
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
-
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+    private void OnNewTaskCompleted(object? sender, EventArgs e)
+    {
+        if (BindingContext is MainViewModel vm)
+            vm.AddTaskCommand.Execute(null);
+    }
 }
