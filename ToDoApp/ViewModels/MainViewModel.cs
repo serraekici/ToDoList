@@ -15,6 +15,18 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private string newTask = string.Empty;
 
+    [ObservableProperty]
+    private int seedInventory;
+
+    [ObservableProperty]
+    private string gardenStatus = "tohum: 0";
+
+    [ObservableProperty]
+    private bool includeDueDate;
+
+    [ObservableProperty]
+    private DateTime newDueDate = DateTime.Today;
+
     public ObservableCollection<TodoItem> Tasks { get; } = new();
 
     public MainViewModel(TodoDatabase db)
@@ -30,7 +42,7 @@ public partial class MainViewModel : ObservableObject
         {
             var hour = DateTime.Now.Hour;
             if (hour < 12) return "günaydın, küçük bahçıvan";
-            if (hour < 18) return "iyi günler, bahçe seni bekliyor";
+            if (hour < 18) return "iyi günler, Profilim seni bekliyor";
             return "akşamın tatlı saatleri";
         }
     }
@@ -45,8 +57,8 @@ public partial class MainViewModel : ObservableObject
     {
         get
         {
-            if (Tasks.Count == 0) return "bahçe henüz uyanıyor";
-            if (CompletedCount == Tasks.Count) return "bahçe tam çiçekte";
+            if (Tasks.Count == 0) return "Profilim henüz uyanıyor";
+            if (CompletedCount == Tasks.Count) return "Profilim tam çiçekte";
             if (CompletedCount == 0) return $"{RemainingCount} tomurcuk bekliyor";
             return $"{CompletedCount} çiçek açtı · {RemainingCount} tomurcuk";
         }
@@ -62,6 +74,7 @@ public partial class MainViewModel : ObservableObject
         foreach (var item in items)
             Tasks.Add(item);
 
+        await RefreshGarden();
         NotifyGardenStats();
     }
 
@@ -70,18 +83,32 @@ public partial class MainViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(NewTask)) return;
 
-        var todo = new TodoItem { Title = NewTask.Trim() };
+        var todo = new TodoItem
+        {
+            Title = NewTask.Trim(),
+            DueDate = IncludeDueDate ? NewDueDate.Date : null
+        };
         await _db.SaveItemAsync(todo);
         Tasks.Insert(0, todo);
         NewTask = string.Empty;
+        IncludeDueDate = false;
+        NewDueDate = DateTime.Today;
         NotifyGardenStats();
     }
 
     [RelayCommand]
     private async Task ToggleComplete(TodoItem item)
     {
-        item.IsCompleted = !item.IsCompleted;
+        var completing = !item.IsCompleted;
+        item.IsCompleted = completing;
         await _db.SaveItemAsync(item);
+        if (completing)
+        {
+            var (_, unlocked) = await _db.AwardCompletionAsync(item.Id);
+            if (!string.IsNullOrEmpty(unlocked))
+                GardenStatus = "yeni tohum açıldı: " + unlocked;
+        }
+        await RefreshGarden();
         NotifyGardenStats();
     }
 
@@ -91,6 +118,14 @@ public partial class MainViewModel : ObservableObject
         await _db.DeleteItemAsync(item);
         Tasks.Remove(item);
         NotifyGardenStats();
+    }
+
+    private async Task RefreshGarden()
+    {
+        var garden = await _db.GetGardenAsync();
+        SeedInventory = garden.SeedInventory;
+        if (string.IsNullOrEmpty(GardenStatus) || !GardenStatus.StartsWith("yeni tohum açıldı", StringComparison.Ordinal))
+            GardenStatus = "tohum: " + garden.SeedInventory;
     }
 
     private void NotifyGardenStats()

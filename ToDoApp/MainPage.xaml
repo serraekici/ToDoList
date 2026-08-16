@@ -6,7 +6,7 @@
              x:Class="ToDoApp.MainPage"
              x:Name="GardenPage"
              x:DataType="vm:MainViewModel"
-             Title="bahçem"
+             Title="Profilim"
              BackgroundColor="{StaticResource Cream}"
              NavigationPage.HasNavigationBar="False"
              Shell.NavBarIsVisible="False">
@@ -24,7 +24,7 @@
                            HorizontalOptions="Center"
                            Opacity="0.9" />
 
-                    <Label Text="bahçem"
+                    <Label Text="Profilim"
                            FontFamily="Playfair"
                            FontSize="40"
                            TextColor="{StaticResource Ink}"
@@ -61,6 +61,10 @@
                                        TextColor="{StaticResource Ink}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
+                            <Label Text="{Binding GardenStatus}"
+                                   FontFamily="Nunito"
+                                   FontSize="12"
+                                   TextColor="{StaticResource InkSoft}" />
                             <ProgressBar Progress="{Binding Progress}"
                                          ProgressColor="{StaticResource Sage}"
                                          HeightRequest="8" />
@@ -78,16 +82,33 @@
                                     Opacity="0.08" />
                         </Border.Shadow>
                         <Grid ColumnDefinitions="*,auto" ColumnSpacing="8" Padding="10,4">
-                            <Entry Placeholder="ne ekelim bugün?"
-                                   Text="{Binding NewTask}"
-                                   FontFamily="Nunito"
-                                   FontSize="15"
-                                   TextColor="{StaticResource Ink}"
-                                   PlaceholderColor="{StaticResource InkSoft}"
-                                   ReturnType="Done"
-                                   Completed="OnNewTaskCompleted" />
+                            <VerticalStackLayout Spacing="6">
+                                <Entry Placeholder="ne ekelim bugün?"
+                                       Text="{Binding NewTask}"
+                                       FontFamily="Nunito"
+                                       FontSize="15"
+                                       TextColor="{StaticResource Ink}"
+                                       PlaceholderColor="{StaticResource InkSoft}"
+                                       ReturnType="Done"
+                                       Completed="OnNewTaskCompleted" />
+                                <HorizontalStackLayout Spacing="8">
+                                    <CheckBox IsChecked="{Binding IncludeDueDate}"
+                                              Color="{StaticResource Sage}" />
+                                    <Label Text="bitiş tarihi"
+                                           FontFamily="Nunito"
+                                           FontSize="12"
+                                           TextColor="{StaticResource InkSoft}"
+                                           VerticalOptions="Center" />
+                                    <DatePicker Date="{Binding NewDueDate}"
+                                                FontFamily="Nunito"
+                                                FontSize="12"
+                                                TextColor="{StaticResource Ink}"
+                                                IsEnabled="{Binding IncludeDueDate}"
+                                                IsVisible="{Binding IncludeDueDate}" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
                             <Button Grid.Column="1"
-                                    Text="ekle 🌷"
+                                    Text="ekle"
                                     Command="{Binding AddTaskCommand}"
                                     FontFamily="Nunito"
                                     FontSize="14"
@@ -95,7 +116,8 @@
                                     CornerRadius="18"
                                     BackgroundColor="{StaticResource DustyRose}"
                                     TextColor="White"
-                                    HeightRequest="42" />
+                                    HeightRequest="42"
+                                    VerticalOptions="Start" />
                         </Grid>
                     </Border>
 
@@ -110,7 +132,7 @@
             <CollectionView.EmptyView>
                 <VerticalStackLayout Padding="32,20" Spacing="8" HorizontalOptions="Center">
                     <Image Source="daisy.png" WidthRequest="72" HeightRequest="72" Opacity="0.85" />
-                    <Label Text="bahçe henüz uykuda"
+                    <Label Text="Profilim henüz uykuda"
                            FontFamily="Playfair"
                            FontSize="20"
                            TextColor="{StaticResource Ink}"
@@ -168,8 +190,10 @@
                                 </Border>
 
                                 <Grid Grid.Column="1"
+                                      RowDefinitions="auto,auto"
                                       ColumnDefinitions="auto,*"
                                       ColumnSpacing="6"
+                                      RowSpacing="2"
                                       VerticalOptions="Center"
                                       Opacity="{Binding TitleOpacity}">
                                     <Label Text="{Binding Motif}" FontSize="16" VerticalOptions="Center" />
@@ -181,6 +205,13 @@
                                            TextDecorations="{Binding TitleDecorations}"
                                            LineBreakMode="WordWrap"
                                            VerticalOptions="Center" />
+                                    <Label Grid.Row="1"
+                                           Grid.ColumnSpan="2"
+                                           Text="{Binding DueDateLabel}"
+                                           IsVisible="{Binding HasDueDate}"
+                                           FontFamily="Nunito"
+                                           FontSize="11"
+                                           TextColor="{Binding DueDateColor}" />
                                 </Grid>
 
                                 <Label Grid.Column="2"

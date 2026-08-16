@@ -1,3 +1,4 @@
+using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
 
@@ -26,6 +27,39 @@ public partial class TodoItem : ObservableObject
     private bool isCompleted;
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    public DateTime? DueDate { get; set; }
+
+    [Ignore]
+    public string DueDateLabel
+    {
+        get
+        {
+            if (DueDate is null) return string.Empty;
+            var day = DueDate.Value.Date;
+            var today = DateTime.Today;
+            var text = "bitiş " + day.ToString("d MMM", new CultureInfo("tr-TR"));
+            if (IsCompleted) return text;
+            if (day < today) return text + " · geçti";
+            if (day == today) return text + " · bugün";
+            return text;
+        }
+    }
+
+    [Ignore]
+    public Color DueDateColor
+    {
+        get
+        {
+            if (DueDate is null || IsCompleted) return Color.FromArgb("#7A7268");
+            if (DueDate.Value.Date < DateTime.Today) return Color.FromArgb("#E36888");
+            if (DueDate.Value.Date == DateTime.Today) return Color.FromArgb("#F08C21");
+            return Color.FromArgb("#7A7268");
+        }
+    }
+
+    [Ignore]
+    public bool HasDueDate => DueDate is not null;
 
     [Ignore]
     public string Motif
@@ -62,5 +96,7 @@ public partial class TodoItem : ObservableObject
         OnPropertyChanged(nameof(CheckMark));
         OnPropertyChanged(nameof(TitleOpacity));
         OnPropertyChanged(nameof(TitleDecorations));
+        OnPropertyChanged(nameof(DueDateLabel));
+        OnPropertyChanged(nameof(DueDateColor));
     }
 }

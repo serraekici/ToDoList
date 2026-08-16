@@ -1,11 +1,28 @@
-const CACHE = "bahcem-v4";
+const CACHE = "bahcem-v15";
 const FILES = [
   "./",
   "./index.html",
   "./bahcem.html",
   "./manifest.webmanifest",
   "./assets/mascot.png",
-  "./assets/apple-touch-icon.png"
+  "./assets/apple-touch-icon.png",
+  "./assets/cloud.png",
+  "./assets/garden-logo.png",
+  "./assets/flowers/stage-seed.png",
+  "./assets/flowers/stage-filiz.png",
+  "./assets/flowers/stage-tomurcuk.png",
+  "./assets/flowers/papatya.png",
+  "./assets/flowers/lavanta.png",
+  "./assets/flowers/cilek.png",
+  "./assets/flowers/tulips.png",
+  "./assets/flowers/sunflower.png",
+  "./assets/avatar/girl.png",
+  "./assets/avatar/boy.png",
+  "./assets/flowers/icon-0.png",
+  "./assets/flowers/icon-1.png",
+  "./assets/flowers/icon-2.png",
+  "./assets/flowers/icon-3.png",
+  "./assets/flowers/icon-4.png"
 ];
 
 self.addEventListener("install", (event) => {

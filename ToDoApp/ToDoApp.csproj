@@ -21,7 +21,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>bahçem</ApplicationTitle>
+		<ApplicationTitle>Profilim</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.todoapp</ApplicationId>
